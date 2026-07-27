@@ -157,6 +157,7 @@ public sealed class DatabaseBootstrapper
             cancellationToken);
         await EnsureColumnAsync("AppConfigurations", "HealthCheckTimeoutSeconds", "INTEGER NOT NULL DEFAULT 30", cancellationToken);
         await EnsureColumnAsync("AppConfigurations", "AutomationEnabled", "INTEGER NOT NULL DEFAULT 1", cancellationToken);
+        await EnsureColumnAsync("AppConfigurations", "SyncAppIndexersAfterAutomation", "INTEGER NOT NULL DEFAULT 0", cancellationToken);
         await EnsureColumnAsync("AppConfigurations", "AutomationIntervalMinutes", "INTEGER NOT NULL DEFAULT 60", cancellationToken);
         await EnsureColumnAsync("AppConfigurations", "AutoAddProtocolFilter", "TEXT NOT NULL DEFAULT 'torrent'", cancellationToken);
         await EnsureColumnAsync("AppConfigurations", "AutoAddLanguageFilter", "TEXT NOT NULL DEFAULT 'it,en'", cancellationToken);

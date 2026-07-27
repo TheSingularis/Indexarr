@@ -149,6 +149,62 @@ public sealed class IndexerAutomationService
         }
     }
 
+    public async Task<ProwlarrAppSyncResult> RunAppIndexerSyncAsync(string trigger, CancellationToken cancellationToken = default)
+    {
+        var configuration = await _configurationService.GetAsync(cancellationToken);
+        if (configuration is null)
+        {
+            return new ProwlarrAppSyncResult
+            {
+                Success = false,
+                Message = T(null, "ConfigurationNotFound")
+            };
+        }
+
+        if (!configuration.SyncAppIndexersAfterAutomation)
+        {
+            return new ProwlarrAppSyncResult
+            {
+                Success = true,
+                Message = "App indexer sync disabled."
+            };
+        }
+
+        if (!string.Equals(configuration.Mode, "Apply", StringComparison.OrdinalIgnoreCase))
+        {
+            const string message = "DryRun: app indexer sync was not queued.";
+            await _auditLogService.WriteAsync("AppIndexerSyncDryRun", configuration.Mode, true, $"{trigger}: {message}", cancellationToken: cancellationToken);
+            return new ProwlarrAppSyncResult
+            {
+                Success = true,
+                DryRun = true,
+                Message = message
+            };
+        }
+
+        try
+        {
+            var result = await _apiClient.QueueAppIndexerSyncAsync(configuration, cancellationToken);
+            await _auditLogService.WriteAsync(
+                "AppIndexerSync",
+                configuration.Mode,
+                result.Success,
+                $"{trigger}: {result.Message}",
+                cancellationToken: cancellationToken);
+            return result;
+        }
+        catch (Exception ex)
+        {
+            _logger.LogWarning(ex, "App indexer sync could not be queued.");
+            await _auditLogService.WriteAsync("AppIndexerSync", configuration.Mode, false, $"{trigger}: {ex.Message}", cancellationToken: cancellationToken);
+            return new ProwlarrAppSyncResult
+            {
+                Success = false,
+                Message = ex.Message
+            };
+        }
+    }
+
     public async Task<ProwlarrIndexerUpdateResult> SetIndexerEnabledAsync(int indexerId, bool enabled, CancellationToken cancellationToken = default)
     {
         var configuration = await _configurationService.GetAsync(cancellationToken);

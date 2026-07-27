@@ -39,6 +39,7 @@ public sealed class AppConfigurationService
         entity.FailureThreshold = draft.FailureThreshold;
         entity.HealthCheckTimeoutSeconds = draft.HealthCheckTimeoutSeconds;
         entity.AutomationEnabled = draft.AutomationEnabled;
+        entity.SyncAppIndexersAfterAutomation = draft.SyncAppIndexersAfterAutomation;
         entity.AutomationIntervalMinutes = draft.AutomationIntervalMinutes;
         entity.BackupBeforeChanges = draft.BackupBeforeChanges;
         entity.AutoDisableFailedIndexers = draft.AutoDisableFailedIndexers;
@@ -114,6 +115,7 @@ public sealed class AppConfigurationService
             FailureThreshold = entity.FailureThreshold,
             HealthCheckTimeoutSeconds = entity.HealthCheckTimeoutSeconds,
             AutomationEnabled = entity.AutomationEnabled,
+            SyncAppIndexersAfterAutomation = entity.SyncAppIndexersAfterAutomation,
             AutomationIntervalMinutes = entity.AutomationIntervalMinutes <= 0 ? _options.Automation.IntervalMinutes : entity.AutomationIntervalMinutes,
             BackupBeforeChanges = entity.BackupBeforeChanges,
             AutoDisableFailedIndexers = entity.AutoDisableFailedIndexers,

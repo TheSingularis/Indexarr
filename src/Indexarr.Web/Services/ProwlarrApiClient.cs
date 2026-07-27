@@ -56,6 +56,60 @@ public sealed class ProwlarrApiClient
         return await response.Content.ReadAsStringAsync(cancellationToken);
     }
 
+    public async Task<ProwlarrAppSyncResult> QueueAppIndexerSyncAsync(SetupDraft configuration, CancellationToken cancellationToken = default)
+    {
+        var client = CreateClient(configuration, isMutation: true);
+        using var applicationsRequest = new HttpRequestMessage(HttpMethod.Get, "/api/v1/applications");
+        applicationsRequest.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+
+        using var applicationsResponse = await client.SendAsync(applicationsRequest, cancellationToken);
+        applicationsResponse.EnsureSuccessStatusCode();
+
+        await using var applicationsStream = await applicationsResponse.Content.ReadAsStreamAsync(cancellationToken);
+        using var applications = await JsonDocument.ParseAsync(applicationsStream, cancellationToken: cancellationToken);
+        var applicationIds = applications.RootElement.ValueKind == JsonValueKind.Array
+            ? applications.RootElement
+                .EnumerateArray()
+                .Where(application => application.TryGetProperty("id", out var id) && id.TryGetInt32(out var value) && value > 0)
+                .Select(application => application.GetProperty("id").GetInt32())
+                .ToList()
+            : [];
+
+        var queued = 0;
+        var failures = new List<string>();
+        foreach (var applicationId in applicationIds)
+        {
+            var command = JsonSerializer.Serialize(new { name = "ApplicationIndexerSync", applicationId });
+            using var commandRequest = new HttpRequestMessage(HttpMethod.Post, "/api/v1/command")
+            {
+                Content = new StringContent(command)
+            };
+            commandRequest.Content.Headers.ContentType = new MediaTypeHeaderValue("application/json");
+
+            using var commandResponse = await client.SendAsync(commandRequest, cancellationToken);
+            if (commandResponse.IsSuccessStatusCode)
+            {
+                queued++;
+                continue;
+            }
+
+            var content = await commandResponse.Content.ReadAsStringAsync(cancellationToken);
+            failures.Add($"app {applicationId}: {BuildError(commandResponse.StatusCode, content)}");
+        }
+
+        return new ProwlarrAppSyncResult
+        {
+            Success = failures.Count == 0,
+            QueuedCount = queued,
+            FailedCount = failures.Count,
+            Message = applicationIds.Count == 0
+                ? "No Prowlarr applications configured."
+                : failures.Count == 0
+                    ? $"Queued app indexer sync for {queued} application(s)."
+                    : $"Queued {queued} application(s); {failures.Count} failed: {string.Join(" | ", failures)}"
+        };
+    }
+
     public async Task<ProwlarrIndexerRecord> GetIndexerRecordAsync(SetupDraft configuration, int indexerId, CancellationToken cancellationToken = default)
     {
         var client = CreateClient(configuration, isMutation: true);

@@ -31,6 +31,9 @@ public sealed class SetupDraft
     [Display(Name = "Enable scheduled automation")]
     public bool AutomationEnabled { get; set; } = true;
 
+    [Display(Name = "Sync app indexers after automation")]
+    public bool SyncAppIndexersAfterAutomation { get; set; }
+
     [Range(1, 1440)]
     [Display(Name = "Automation interval minutes")]
     public int AutomationIntervalMinutes { get; set; } = 60;

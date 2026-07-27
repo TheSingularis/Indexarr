@@ -103,10 +103,11 @@ public sealed class IndexerAutomationHostedService : BackgroundService
             }
 
             var autoAddResult = await service.RunAutoAddAsync(trigger, cancellationToken);
-            var succeeded = autoAddResult.Reachable;
+            var appSyncResult = await service.RunAppIndexerSyncAsync(trigger, cancellationToken);
+            var succeeded = autoAddResult.Reachable && appSyncResult.Success;
             var message = autoAddResult.Reachable
-                ? $"{trigger}: {healthCheckResult.HealthyIndexers} OK, {healthCheckResult.FailedIndexers} KO. Auto-add: {autoAddResult.Message}"
-                : $"{trigger}: {healthCheckResult.HealthyIndexers} OK, {healthCheckResult.FailedIndexers} KO. Auto-add failed: {autoAddResult.Message}";
+                ? $"{trigger}: {healthCheckResult.HealthyIndexers} OK, {healthCheckResult.FailedIndexers} KO. Auto-add: {autoAddResult.Message} App sync: {appSyncResult.Message}"
+                : $"{trigger}: {healthCheckResult.HealthyIndexers} OK, {healthCheckResult.FailedIndexers} KO. Auto-add failed: {autoAddResult.Message} App sync: {appSyncResult.Message}";
 
             _runtimeState.Complete(succeeded, message);
         }

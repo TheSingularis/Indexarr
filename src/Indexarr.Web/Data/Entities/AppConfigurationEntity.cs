@@ -16,6 +16,8 @@ public sealed class AppConfigurationEntity
 
     public bool AutomationEnabled { get; set; } = true;
 
+    public bool SyncAppIndexersAfterAutomation { get; set; }
+
     public int AutomationIntervalMinutes { get; set; } = 60;
 
     public bool BackupBeforeChanges { get; set; } = true;
