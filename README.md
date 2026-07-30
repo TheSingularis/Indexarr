@@ -3,7 +3,7 @@
 > [!WARNING]
 > **Vibe-coded project.** Indexarr is built through a fast, AI-assisted and experimentation-driven workflow. It is actively evolving: review changes carefully and test them in your own environment before relying on automatic remediation for production Prowlarr instances.
 
-**Indexarr** is a self-hosted control room for Prowlarr indexers. Monitor availability in real time, keep an audit trail, automate health checks and apply safeguards before unhealthy indexers become a problem.
+**Indexarr** is a self-hosted control room for Prowlarr indexers. Monitor availability in real time, keep an audit trail, automate health checks and apply safeguards before unhealthy indexers become a problem. Its standout capability is rule-driven discovery and automatic onboarding of new indexers, so your stack can keep improving without constant manual searching.
 
 ## ✨ What you can do
 
