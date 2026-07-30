@@ -9,8 +9,9 @@
   <Privileged>false</Privileged>
   <Support>https://github.com/gabryk91/Indexarr/issues</Support>
   <Project>https://github.com/gabryk91/Indexarr</Project>
-  <Overview>Indexarr is a self-hosted ASP.NET Core web app for monitoring and automating Prowlarr indexer health. The built-in scheduler runs inside the container background service and does not require UI access.</Overview>
-  <Category>Tools:</Category>
+  <Overview>Monitor, protect, and automate the health of your Prowlarr indexers.</Overview>
+  <Description>Indexarr is a self-hosted dashboard for monitoring Prowlarr indexers and automating health checks, backups, blocking, disabling, and guided onboarding. It stores its configuration and SQLite database in /config, writes backup exports to /backups, and can optionally persist logs in /logs. Configure the Prowlarr URL and API key before starting the scheduler.</Description>
+  <Category>Tools:Utilities</Category>
   <WebUI>http://[IP]:[PORT:8080]/</WebUI>
   <TemplateURL>https://raw.githubusercontent.com/gabryk91/Indexarr/main/unraid/Indexarr.xml</TemplateURL>
   <Icon>https://raw.githubusercontent.com/gabryk91/Indexarr/main/src/Indexarr.Web/wwwroot/images/indexarr_logo.png</Icon>
