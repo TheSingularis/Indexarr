@@ -1,173 +1,55 @@
-# Indexarr
+# Indexarr 📡
 
-![Indexarr logo](src/Indexarr.Web/wwwroot/images/indexarr_logo.png)
+> [!WARNING]
+> **Vibe-coded project.** Indexarr is built through a fast, AI-assisted and experimentation-driven workflow. It is actively evolving: review changes carefully and test them in your own environment before relying on automatic remediation for production Prowlarr instances.
 
-`📡 Self-hosted dashboard to monitor, protect, and automate Prowlarr indexers.`
+**Indexarr** is a self-hosted control room for Prowlarr indexers. Monitor availability in real time, keep an audit trail, automate health checks and apply safeguards before unhealthy indexers become a problem.
 
-`🇮🇹 Italiano | 🇬🇧 English`
+## ✨ What you can do
 
-## `🇮🇹 Italiano`
+| | |
+| --- | --- |
+| 📊 **See the whole picture** | Follow availability, latency, status distribution and health trends from one live dashboard. |
+| 🩺 **Run health checks** | Check indexers on demand or on a schedule, then filter the results by state and protocol. |
+| 🛡️ **Protect your stack** | Disable or block unhealthy indexers according to the safeguards you configure. |
+| 💾 **Keep recoverable backups** | Preserve Prowlarr exports before changes, with dedicated configuration and backup storage. |
+| ➕ **Automate onboarding** | Let Indexarr evaluate candidates for controlled, guided indexer auto-add workflows. |
+| ⚙️ **Stay in control** | Choose between `DryRun` and `Apply`, set thresholds and tune automation intervals from the web UI. |
 
-### `✨ Perche' esiste`
+## 📸 See it in action
 
-Indexarr nasce per dare una vista chiara sugli indexer configurati in Prowlarr e per automatizzare le azioni piu' noiose: controlli di salute, backup, blocco, disattivazione e aggiunta guidata di nuovi indexer.
+### Monitor indexer health at a glance
 
-E' anche un progetto costruito in **vibe coding**: iterazione rapida, feedback continuo, funzionalita' concrete prima della perfezione teorica. L'obiettivo e' avere uno strumento utile davvero, da usare e migliorare mentre evolve.
+![Indexarr monitoring dashboard](img/readme/indexarr-dashboard.png)
 
-### `🧭 Cosa fa`
+Track operational indexers, failures, latency and recent health trends, then drill into the current state of every configured indexer.
 
-- `📊 Dashboard` con stato indexer, filtri e storico audit
-- `🩺 Health check` manuali e schedulati
-- `🔒 Protezioni` con blocco o disattivazione degli indexer problematici
-- `💾 Backup` automatici o manuali prima delle modifiche
-- `➕ Auto-add` di indexer con filtri e regole predefinite
-- `⚙️ Setup web` iniziale con test connessione a Prowlarr
-- `🔐 Accesso protetto` via autenticazione cookie
-- `🌍 UI bilingue` italiano e inglese
+### Configure safe automation
 
-### `🧱 Stack`
+![Indexarr automation settings](img/readme/indexarr-settings.png)
 
-- `.NET 9`
-- `ASP.NET Core Razor Pages`
-- `Entity Framework Core`
-- `SQLite`
-- `Docker`
-- `Unraid-ready`
+Set the operating mode, failure threshold, timeout and schedule before Indexarr performs automatic actions.
 
-### `🚀 Avvio rapido`
+## 🚀 Deploy in minutes
 
-#### `Docker`
+### Unraid (recommended)
 
-```bash
-docker build -t indexarr .
+Indexarr is available in **Unraid Community Apps**. Search for **Indexarr** in the Apps tab, install it, then configure your Prowlarr URL and API key.
 
-docker run -d \
-  --name indexarr \
-  -p 9697:8080 \
-  -e TZ=Europe/Rome \
-  -e Indexarr__Prowlarr__Url=http://prowlarr:9696 \
-  -e Indexarr__Prowlarr__ApiKey=YOUR_API_KEY \
-  -v /path/to/indexarr/config:/config \
-  -v /path/to/indexarr/backups:/backups \
-  -v /path/to/indexarr/logs:/logs \
-  indexarr
-```
-
-Poi apri `http://localhost:9697`.
-
-#### `Aggiornare Indexarr`
-
-Per aggiornare un'installazione Docker:
-
-```bash
-docker pull gabryk83/indexarr:latest
-docker stop indexarr
-docker rm indexarr
-```
-
-Poi ricrea il container usando il comando `docker run` del paragrafo precedente. Le configurazioni e i dati restano disponibili nelle cartelle montate (`/config`, `/backups`, `/logs`). Su Unraid usa `Check for Updates` e poi `Update` nel container.
-
-#### `Unraid`
-
-E' disponibile un template pronto per Unraid in [unraid/Indexarr.xml](unraid/Indexarr.xml).
-
-Usa questo URL come template:
+You can also install from the template directly:
 
 ```text
 https://raw.githubusercontent.com/gabryk91/Indexarr/main/unraid/Indexarr.xml
 ```
 
-Il template precompila:
+The template configures the web port, persistent storage, timezone and the main Prowlarr/automation variables.
 
-- porta web
-- path `/config`, `/backups`, `/logs`
-- variabili `TZ`, `Indexarr__ConfigPath`, `Indexarr__BackupPath`, `Indexarr__LogsPath`
-- variabili Prowlarr e scheduler
-
-Se installi da immagine Docker senza template, assicurati comunque di mappare almeno:
-
-- `/config`
-- `/backups`
-- opzionalmente `/logs`
-
-#### `Sviluppo locale`
+### Docker
 
 ```bash
-dotnet restore src/Indexarr.Web/Indexarr.Web.csproj
-dotnet run --project src/Indexarr.Web/Indexarr.Web.csproj
-```
-
-Per default l'app punta a `http://127.0.0.1:9696` come istanza Prowlarr.
-
-### `⚙️ Configurazione`
-
-Variabili ambiente principali:
-
-- `Indexarr__Prowlarr__Url`
-- `Indexarr__Prowlarr__ApiKey`
-- `Indexarr__Automation__Enabled`
-- `Indexarr__Automation__IntervalMinutes`
-- `Indexarr__ConfigPath`
-- `Indexarr__BackupPath`
-- `Indexarr__LogsPath`
-- `TZ`
-
-Endpoint utili:
-
-- `GET /healthz`
-- `GET /readyz`
-- `GET /api/meta`
-- `GET /api/automation-status`
-
-### `🗂️ Persistenza`
-
-Indexarr usa cartelle dedicate per mantenere dati e cronologia:
-
-- `/config` per configurazione e database SQLite
-- `/backups` per i dump degli indexer
-- `/logs` per i log applicativi
-
-### `🧪 Stato del progetto`
-
-Il progetto e' attivo e pragmatico: alcune scelte privilegiano velocita' di iterazione, usabilita' e deploy semplice. Se cerchi un tool estremamente rifinito o enterprise-first, questo non e' il punto. Se invece vuoi un progetto utile, self-hosted e in evoluzione rapida, sei nel posto giusto.
-
-## `🇬🇧 English`
-
-### `✨ Why it exists`
-
-Indexarr is built to give you a clear view of the indexers configured in Prowlarr and to automate the most repetitive tasks: health checks, backups, blocking, disabling, and guided onboarding of new indexers.
-
-It is also a **vibe coding** project: fast iteration, continuous feedback, and practical features before theoretical perfection. The goal is to build something genuinely useful, then keep improving it while it is being used.
-
-### `🧭 What it does`
-
-- `📊 Dashboard` with indexer status, filters, and audit history
-- `🩺 Health checks` both manual and scheduled
-- `🔒 Safeguards` to block or disable problematic indexers
-- `💾 Backups` automatic or manual before changes
-- `➕ Auto-add` for indexers with predefined filters and rules
-- `⚙️ Web setup` with built-in Prowlarr connection test
-- `🔐 Protected access` through cookie authentication
-- `🌍 Bilingual UI` in Italian and English
-
-### `🧱 Stack`
-
-- `.NET 9`
-- `ASP.NET Core Razor Pages`
-- `Entity Framework Core`
-- `SQLite`
-- `Docker`
-- `Unraid-ready`
-
-### `🚀 Quick start`
-
-#### `Docker`
-
-```bash
-docker build -t indexarr .
-
 docker run -d \
   --name indexarr \
+  --restart unless-stopped \
   -p 9697:8080 \
   -e TZ=Europe/Rome \
   -e Indexarr__Prowlarr__Url=http://prowlarr:9696 \
@@ -175,44 +57,26 @@ docker run -d \
   -v /path/to/indexarr/config:/config \
   -v /path/to/indexarr/backups:/backups \
   -v /path/to/indexarr/logs:/logs \
-  indexarr
+  gabryk83/indexarr:latest
 ```
 
 Then open `http://localhost:9697`.
 
-#### `Updating Indexarr`
+> [!TIP]
+> Keep `/config` and `/backups` persistent. They contain Indexarr settings, its SQLite database and recoverable Prowlarr exports.
 
-To update a Docker installation:
+## ⚙️ Configuration essentials
 
-```bash
-docker pull gabryk83/indexarr:latest
-docker stop indexarr
-docker rm indexarr
-```
-
-Then recreate the container using the `docker run` command from the previous section. Configuration and data remain available in the mounted folders (`/config`, `/backups`, `/logs`). On Unraid, use `Check for Updates` and then `Update` for the container.
-
-#### `Local development`
-
-```bash
-dotnet restore src/Indexarr.Web/Indexarr.Web.csproj
-dotnet run --project src/Indexarr.Web/Indexarr.Web.csproj
-```
-
-By default, the app points to `http://127.0.0.1:9696` as the Prowlarr instance.
-
-### `⚙️ Configuration`
-
-Main environment variables:
-
-- `Indexarr__Prowlarr__Url`
-- `Indexarr__Prowlarr__ApiKey`
-- `Indexarr__Automation__Enabled`
-- `Indexarr__Automation__IntervalMinutes`
-- `Indexarr__ConfigPath`
-- `Indexarr__BackupPath`
-- `Indexarr__LogsPath`
-- `TZ`
+| Variable | Purpose |
+| --- | --- |
+| `Indexarr__Prowlarr__Url` | Base URL of the Prowlarr instance to manage. |
+| `Indexarr__Prowlarr__ApiKey` | Prowlarr API key; keep it secret. |
+| `Indexarr__Automation__Enabled` | Enables scheduled health checks and auto-add workflows. |
+| `Indexarr__Automation__IntervalMinutes` | Interval between scheduled runs. |
+| `Indexarr__ConfigPath` | Persistent configuration and SQLite database path. |
+| `Indexarr__BackupPath` | Destination for backup exports. |
+| `Indexarr__LogsPath` | Optional persistent log directory. |
+| `TZ` | IANA timezone used for UI timestamps and scheduling. |
 
 Useful endpoints:
 
@@ -221,18 +85,18 @@ Useful endpoints:
 - `GET /api/meta`
 - `GET /api/automation-status`
 
-### `🗂️ Persistence`
+## 🔐 Safety model
 
-Indexarr uses dedicated folders to keep data and history:
+Indexarr is designed to make automation explicit. Start with **DryRun** to validate your configuration, preserve backups, then switch to **Apply** only when you are comfortable with the rules and thresholds. Never expose your Prowlarr API key in screenshots, issues or public configuration files.
 
-- `/config` for configuration and the SQLite database
-- `/backups` for indexer dumps
-- `/logs` for application logs
+## 🧪 Project status
 
-### `🧪 Project status`
+Indexarr is under active development. Feedback, bug reports and real-world health-check scenarios are welcome.
 
-This project is active and pragmatic: some decisions intentionally favor iteration speed, usability, and simple deployment. If you are looking for an extremely polished or enterprise-first tool, this is probably not it. If you want something useful, self-hosted, and evolving quickly, this is the right direction.
+- 🐛 [Report an issue](https://github.com/gabryk91/Indexarr/issues)
+- 💡 [Browse the source code](https://github.com/gabryk91/Indexarr)
+- 🐳 [View the Docker image](https://hub.docker.com/r/gabryk83/indexarr)
 
-## `📜 License`
+## 📄 License
 
-This project is released under the MIT license. See [LICENSE](LICENSE).
+Indexarr is released under the [MIT License](LICENSE).
