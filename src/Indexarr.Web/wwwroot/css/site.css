@@ -556,6 +556,7 @@ h1, h2, h3, h4, h5, h6,
 
 .flash-banner {
   margin-top: 1.5rem;
+  margin-bottom: 1.5rem;
   padding: 0.95rem 1rem;
   border: 1px solid rgba(51, 214, 166, 0.28);
   border-radius: var(--ix-radius);
