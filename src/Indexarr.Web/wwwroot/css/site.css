@@ -316,7 +316,7 @@ a {
   border-radius: 50%;
   background:
     radial-gradient(circle at center, var(--ix-bg-soft) 0 54%, transparent 55%),
-    conic-gradient(from 210deg, var(--countdown-color) calc(var(--countdown-progress) * 1turn), var(--ix-border) 0);
+    conic-gradient(from 0deg, var(--countdown-color) calc(var(--countdown-progress) * 1turn), var(--ix-border) 0);
   box-shadow: 0 0 0 1px var(--ix-border);
   transition: background 0.35s ease, box-shadow 0.35s ease, transform 0.35s ease;
 }
@@ -1600,7 +1600,7 @@ body.is-busy .processing-modal.is-active {
 .audit-table-card .audit-table th:nth-child(4) { width: 12%; }
 .audit-table-card .audit-table th:nth-child(5) { width: 48%; }
 .automation-progress-track { display: none; }
-.automation-ring { background: radial-gradient(circle at center, var(--ix-bg-soft) 0 57%, transparent 58%), conic-gradient(from 210deg, var(--countdown-color) calc(var(--countdown-progress) * 1turn), rgba(255,255,255,.08) 0); box-shadow: none; }
+.automation-ring { background: radial-gradient(circle at center, var(--ix-bg-soft) 0 57%, transparent 58%), conic-gradient(from 0deg, var(--countdown-color) calc(var(--countdown-progress) * 1turn), rgba(255,255,255,.08) 0); box-shadow: none; }
 .automation-ring::before { inset: .7rem; border: 0; box-shadow: inset 0 0 0 1px rgba(255,255,255,.06); }
 .automation-ring-core { transform: translateY(.05rem); }
 
@@ -1661,7 +1661,7 @@ body.is-busy .processing-modal.is-active {
 
 /* Keep the automation ring clean: no inner hairline or double dark edge. */
 .automation-ring {
-  background: conic-gradient(from 210deg, var(--countdown-color) calc(var(--countdown-progress) * 1turn), rgba(255,255,255,.08) 0);
+  background: conic-gradient(from 0deg, var(--countdown-color) calc(var(--countdown-progress) * 1turn), rgba(255,255,255,.08) 0);
 }
 .automation-ring::before {
   inset: .7rem;
